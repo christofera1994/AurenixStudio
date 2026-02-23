@@ -22,7 +22,6 @@ export function Navbar({
     return () => window.removeEventListener("scroll", handler);
   }, []);
 
-  // close on ESC
   useEffect(() => {
     const onKeyDown = (e: KeyboardEvent) => {
       if (e.key === "Escape") setOpen(false);
@@ -39,17 +38,13 @@ export function Navbar({
         scrolled
           ? "bg-background/60 backdrop-blur-xl border border-primary/10 text-primary"
           : "bg-transparent text-white"
-      } ${
-        // Desktop = always pill. Mobile = dynamic pill that can expand
-        open ? "rounded-3xl" : "rounded-full"
-      }`}
+      } ${open ? "rounded-3xl" : "rounded-full"}`}
       style={{
-        // Mobile: keep it inside screen. Desktop: size-to-content.
         width: open ? "calc(100vw - 1.25rem)" : "auto",
         maxWidth: open ? "520px" : "none",
       }}
     >
-      {/* Desktop layout (your original) */}
+      {/* Desktop: original floating island */}
       <div className="hidden sm:flex items-center gap-8 px-6 py-3">
         <Link href="/" className="font-bold tracking-tight text-lg link-lift">
           {brand}
@@ -76,9 +71,9 @@ export function Navbar({
         </Link>
       </div>
 
-      {/* Mobile dynamic island */}
+      {/* Mobile: dynamic island (single column links) */}
       <div className="sm:hidden px-3 py-2.5">
-        {/* Top row: compact island */}
+        {/* Compact row */}
         <div className="flex items-center gap-3">
           <Link
             href="/"
@@ -99,16 +94,16 @@ export function Navbar({
           </button>
         </div>
 
-        {/* Expanded content inside same island */}
+        {/* Expanded list (one under another) */}
         {open && (
           <div className="mt-3 pt-3 border-t border-white/10">
-            <div className="grid grid-cols-2 gap-2">
+            <div className="flex flex-col gap-2">
               {links.map((link) => (
                 <Link
                   key={link.id}
                   href={link.href}
                   onClick={() => setOpen(false)}
-                  className="px-3 py-2.5 rounded-2xl bg-white/5 border border-white/10 text-sm font-semibold opacity-90 hover:opacity-100 hover:bg-white/10 transition link-lift"
+                  className="w-full px-4 py-3 rounded-2xl bg-white/5 border border-white/10 text-sm font-semibold opacity-90 hover:opacity-100 hover:bg-white/10 transition link-lift"
                 >
                   {link.label}
                 </Link>
