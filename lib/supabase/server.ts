@@ -24,7 +24,7 @@ export function createClient() {
               cookieStore.set(name, value, options);
             });
           } catch {
-            // ignore in server component render phase
+            // OK to ignore in some server component render phases
           }
         },
       },
