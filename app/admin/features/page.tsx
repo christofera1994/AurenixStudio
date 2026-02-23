@@ -13,7 +13,10 @@ export default function AdminFeaturesPage() {
 
   const load = async () => {
     const supabase = createClient();
-    const { data } = await supabase.from("features").select("*").order("order_index");
+    const { data } = await supabase
+      .from("features")
+      .select("*")
+      .order("order_index");
     setItems(data ?? []);
   };
 
@@ -24,13 +27,19 @@ export default function AdminFeaturesPage() {
   const move = async (idx: number, dir: number) => {
     const next = idx + dir;
     if (next < 0 || next >= items.length) return;
+
     const copy = [...items];
     [copy[idx], copy[next]] = [copy[next], copy[idx]];
     copy.forEach((item, i) => (item.order_index = i));
+
     const supabase = createClient();
     for (const item of copy) {
-      await supabase.from("features").update({ order_index: item.order_index }).eq("id", item.id);
+      await supabase
+        .from("features")
+        .update({ order_index: item.order_index })
+        .eq("id", item.id);
     }
+
     setItems(copy);
   };
 
@@ -45,9 +54,13 @@ export default function AdminFeaturesPage() {
         sub_labels: item.sub_labels,
       })
       .eq("id", item.id);
+
     setEditing(null);
     if (error) setMessage(error.message);
-    else { setMessage("Saved."); load(); }
+    else {
+      setMessage("Saved.");
+      load();
+    }
   };
 
   const del = async (id: string) => {
@@ -70,6 +83,7 @@ export default function AdminFeaturesPage() {
       })
       .select()
       .single();
+
     if (data) setItems([...items, data]);
   };
 
@@ -90,14 +104,18 @@ export default function AdminFeaturesPage() {
           ← Dashboard
         </Link>
       </div>
+
       <h1 className="font-sans font-bold text-2xl mb-6 text-white">Features</h1>
+
       {message && <p className="mb-4 text-emerald-400">{message}</p>}
+
       <button
         onClick={add}
         className="mb-6 px-4 py-2 rounded-full bg-accent text-primary font-medium btn-magnetic"
       >
         Add Feature
       </button>
+
       <ul className="space-y-4">
         {items.map((item, idx) => (
           <li
@@ -123,40 +141,50 @@ export default function AdminFeaturesPage() {
                   ↓
                 </button>
               </div>
+
               <div className="flex-1 space-y-2">
                 <input
-                  className="w-full px-3 py-1.5 rounded-lg bg-white/5 border border-white/10 text-white"
+                  className="w-full px-3 py-1.5 rounded-lg bg-white/5 border border-white/10 text-white font-medium"
                   value={item.heading}
-                  onChange={(e) => updateItem(item.id, (f) => ({ ...f, heading: e.target.value }))}
-                  className="w-full px-3 py-1 rounded-lg border font-medium"
+                  onChange={(e) =>
+                    updateItem(item.id, (f) => ({ ...f, heading: e.target.value }))
+                  }
                   placeholder="Heading"
                 />
+
                 <input
-                  className="w-full px-3 py-1.5 rounded-lg bg-white/5 border border-white/10 text-white"
+                  className="w-full px-3 py-1.5 rounded-lg bg-white/5 border border-white/10 text-white text-sm"
                   value={item.descriptor}
-                  onChange={(e) => updateItem(item.id, (f) => ({ ...f, descriptor: e.target.value }))}
-                  className="w-full px-3 py-1 rounded-lg border text-sm"
+                  onChange={(e) =>
+                    updateItem(item.id, (f) => ({ ...f, descriptor: e.target.value }))
+                  }
                   placeholder="Descriptor"
                 />
+
                 <input
-                  className="w-full px-3 py-1.5 rounded-lg bg-white/5 border border-white/10 text-white"
+                  className="w-full px-3 py-1.5 rounded-lg bg-white/5 border border-white/10 text-white text-sm"
                   value={item.value_prop}
-                  onChange={(e) => updateItem(item.id, (f) => ({ ...f, value_prop: e.target.value }))}
-                  className="w-full px-3 py-1 rounded-lg border text-sm"
+                  onChange={(e) =>
+                    updateItem(item.id, (f) => ({ ...f, value_prop: e.target.value }))
+                  }
                   placeholder="Value prop"
                 />
+
                 <input
-                  className="w-full px-3 py-1.5 rounded-lg bg-white/5 border border-white/10 text-white"
+                  className="w-full px-3 py-1.5 rounded-lg bg-white/5 border border-white/10 text-white text-sm"
                   value={item.sub_labels?.join(", ") ?? ""}
                   onChange={(e) =>
                     updateItem(item.id, (f) => ({
                       ...f,
-                      sub_labels: e.target.value.split(",").map((s) => s.trim()).filter(Boolean),
+                      sub_labels: e.target.value
+                        .split(",")
+                        .map((s) => s.trim())
+                        .filter(Boolean),
                     }))
                   }
-                  className="w-full px-3 py-1 rounded-lg border text-sm"
                   placeholder="Sub-labels (comma-separated)"
                 />
+
                 <div className="flex gap-2 mt-2">
                   <button
                     onClick={() => save(item)}
