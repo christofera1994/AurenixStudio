@@ -12,11 +12,8 @@ export async function updateSession(request: NextRequest) {
   const isAdminLogin = path === "/admin/login";
   const isAdmin = path.startsWith("/admin");
 
-  // Create a response we can attach cookies to (important for Supabase auth refresh)
   const response = NextResponse.next({
-    request: {
-      headers: request.headers,
-    },
+    request: { headers: request.headers },
   });
 
   const supabase = createServerClient(
@@ -39,7 +36,6 @@ export async function updateSession(request: NextRequest) {
   const { data } = await supabase.auth.getUser();
   const user = data.user;
 
-  // If not logged in, protect /admin/*
   if (isAdmin && !isAdminLogin && !user) {
     const url = request.nextUrl.clone();
     url.pathname = "/admin/login";
@@ -47,7 +43,6 @@ export async function updateSession(request: NextRequest) {
     return NextResponse.redirect(url);
   }
 
-  // If logged in and trying to access /admin/login, redirect to /admin
   if (isAdminLogin && user) {
     const url = request.nextUrl.clone();
     url.pathname = "/admin";
