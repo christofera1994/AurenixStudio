@@ -25,18 +25,24 @@ export function Navbar({
 
   return (
     <nav
-      className={`fixed top-6 left-1/2 -translate-x-1/2 z-50 px-6 py-3 rounded-full transition-all duration-500 ${
+      className={`fixed top-6 left-1/2 -translate-x-1/2 z-50 rounded-full transition-all duration-500
+      w-[calc(100vw-1.25rem)] max-w-4xl
+      px-3 sm:px-6 py-3
+      ${
         scrolled
           ? "bg-background/60 backdrop-blur-xl border border-primary/10 text-primary"
           : "bg-transparent text-white"
       }`}
     >
-      <div className="flex items-center gap-4 sm:gap-8">
-        <Link href="/" className="font-bold tracking-tight text-lg link-lift whitespace-nowrap">
+      <div className="flex items-center gap-3 sm:gap-8 min-w-0">
+        <Link
+          href="/"
+          className="font-bold tracking-tight text-base sm:text-lg link-lift whitespace-nowrap shrink-0"
+        >
           {brand}
         </Link>
 
-        {/* DESKTOP LINKS (original behavior) */}
+        {/* DESKTOP LINKS */}
         <div className="hidden sm:flex items-center gap-6">
           {links.map((link) => (
             <Link
@@ -49,14 +55,15 @@ export function Navbar({
           ))}
         </div>
 
-        {/* MOBILE LINKS (NEW): visible on phone, horizontal scroll inside the same pill */}
-        <div className="sm:hidden flex-1 overflow-x-auto">
-          <div className="flex items-center gap-3 pr-2">
+        {/* MOBILE LINKS (scroll inside) */}
+        <div className="sm:hidden flex-1 min-w-0 overflow-x-auto">
+          <div className="flex items-center gap-2 pr-2">
             {links.map((link) => (
               <Link
                 key={link.id}
                 href={link.href}
-                className="text-xs font-semibold opacity-90 hover:opacity-100 link-lift whitespace-nowrap px-3 py-1.5 rounded-full bg-white/5 border border-white/10"
+                className="text-xs font-semibold opacity-90 hover:opacity-100 link-lift whitespace-nowrap
+                px-2.5 py-1.5 rounded-full bg-white/5 border border-white/10"
               >
                 {link.label}
               </Link>
@@ -64,9 +71,10 @@ export function Navbar({
           </div>
         </div>
 
+        {/* CTA */}
         <Link
           href="#pricing"
-          className="ml-auto px-4 py-2 rounded-full bg-accent text-primary font-semibold text-sm btn-magnetic overflow-hidden relative group whitespace-nowrap"
+          className="shrink-0 px-3 sm:px-4 py-2 rounded-full bg-accent text-primary font-semibold text-xs sm:text-sm btn-magnetic overflow-hidden relative group whitespace-nowrap"
         >
           <span className="absolute inset-0 bg-white/30 translate-y-full group-hover:translate-y-0 transition-transform duration-300" />
           <span className="relative">{ctaText}</span>
